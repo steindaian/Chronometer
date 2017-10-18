@@ -1,0 +1,19 @@
+NET "clk" LOC = V10;
+Net "rst" LOC = B8;
+Net "start" LOC = C4;
+Net "stop" LOC = D9;
+Net "restart" Loc = C9;
+
+Net "hex_display[0]" loc = T17;
+Net "hex_display[1]" loc = T18;
+Net "hex_display[2]" loc = U17;
+Net "hex_display[3]" loc = U18;
+Net "hex_display[4]" loc = M14;
+Net "hex_display[5]" loc = N14;
+Net "hex_display[6]" loc = L14;
+Net "hex_display[7]" loc = M13;
+
+Net "an[3]" loc = P17;
+Net "an[2]" loc = P18;
+Net "an[1]" loc = N15;
+Net "an[0]" loc = N16;
