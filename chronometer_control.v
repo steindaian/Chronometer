@@ -4,7 +4,13 @@ module chronometer_control #( parameter SIZE = 32, parameter VALUE = 5000000, pa
 									       input 	     start_d,
 									       input 	     stop_d,
 									       input 	     restart_d,
-									       output [15:0] value
+									       output [15:0] value,
+											 
+											 output [ADDR_SIZE-1 : 0]  rd_addr,
+											 input  [DATA_SIZE-1 : 0] rd_data,
+											 output [ADDR_SIZE-1 : 0]  wr_addr,
+											 output [DATA_SIZE-1 : 0]      wr_data,
+											 output 			      wr_en
 									       );
 
    localparam IDLE = 2'b00;
@@ -16,21 +22,17 @@ module chronometer_control #( parameter SIZE = 32, parameter VALUE = 5000000, pa
    reg [SIZE-1:0] 									     cnt_nxt,cnt_reg;
    
    wire 										     start,stop,restart;
-   wire [DATA_SIZE-1:0] 										     rd_data;
-   reg [DATA_SIZE-1:0] 											     wr_data;
+
+   reg [DATA_SIZE-1:0] 											     wr_data_nxt,wr_data_reg;
    reg [ADDR_SIZE-1:0] 											     wr_addr_reg,wr_addr_nxt,rd_addr_reg,rd_addr_nxt;
    reg 													     wr_en_reg,wr_en_nxt;
    
 
-
-   bram_inf #( .RAM_WIDTH(DATA_SIZE), .RAM_ADDR_BITS(ADDR_SIZE)) ram (
-								     .clk(clk),
-								     .rd_addr(rd_addr_reg),
-								     .rd_data(rd_data),
-								     .wr_data(wr_data),
-								     .wr_addr(wr_addr_reg),
-								     .write_enable(wr_en_reg)
-								     );
+	assign wr_en = wr_en_reg;
+	assign wr_data = wr_data_reg;
+	assign rd_addr = rd_addr_reg;
+	assign wr_addr = wr_addr_reg;
+   
    
 		
    assign start = start_d & ~restart_d & ~stop_d;
@@ -47,6 +49,7 @@ module chronometer_control #( parameter SIZE = 32, parameter VALUE = 5000000, pa
       rd_addr_nxt = rd_addr_reg;
       wr_en_nxt = wr_en_reg;
       wr_addr_nxt = wr_addr_reg;
+		wr_data_nxt = wr_data_reg;
       case(state_nxt)
 	IDLE : begin
 	   value_nxt = 'b0; 
@@ -72,7 +75,7 @@ module chronometer_control #( parameter SIZE = 32, parameter VALUE = 5000000, pa
 	   if(stop) begin
 	      state_nxt = STOP;
 	      wr_en_nxt = 1'b1;
-	      wr_data = value_reg;
+	      wr_data_nxt = value_reg;
 	      
 	      rd_addr_nxt = wr_addr_reg;
 	      
@@ -111,9 +114,10 @@ module chronometer_control #( parameter SIZE = 32, parameter VALUE = 5000000, pa
 	 wr_en_reg <= 1'b0;
 	 rd_addr_reg <= 'b0;
 	 wr_addr_reg <= 'b0;
-	 
+	 wr_data_reg <= 'b0;
       end
       else begin
+		wr_data_reg <= wr_data_nxt;
 	 state_reg <= state_nxt;
 	 value_reg <= value_nxt;
 	 wr_en_reg <= wr_en_nxt;

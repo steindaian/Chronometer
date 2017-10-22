@@ -46,7 +46,7 @@ module clk_gen #( parameter FREQ_IN = 50, parameter FREQ_OUT = 5) (
       .CLKIN(clk_in),       // 1-bit input: Clock input
       .DSSEN(),       // 1-bit input: Unsupported, specify to GND.
       .PSCLK(),       // 1-bit input: Phase shift clock input
-      .PSEN(),         // 1-bit input: Phase shift enable
+      .PSEN(1'b0),         // 1-bit input: Phase shift enable
       .PSINCDEC(), // 1-bit input: Phase shift increment/decrement input
       .RST(rst)            // 1-bit input: Active high reset input
    );

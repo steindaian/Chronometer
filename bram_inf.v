@@ -4,7 +4,7 @@ module bram_inf  #(parameter RAM_WIDTH = 16,    parameter RAM_ADDR_BITS = 9)   (
 											       output reg [RAM_WIDTH-1 : 0] rd_data,
 											       input [RAM_ADDR_BITS-1 : 0]  wr_addr,
 											       input [RAM_WIDTH-1 : 0]      wr_data,
-											       input 			      write_enable
+											       input 			      wr_en
 											       );
    
    reg [RAM_WIDTH- 1 : 0] 												      ram [2**RAM_ADDR_BITS-1:0];
@@ -12,7 +12,7 @@ module bram_inf  #(parameter RAM_WIDTH = 16,    parameter RAM_ADDR_BITS = 9)   (
 																begin
 																   
 																      
-																      if(write_enable)
+																      if(wr_en)
 																	ram[wr_addr] <= wr_data;
 																      rd_data<= ram[rd_addr];
 																   
