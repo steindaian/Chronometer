@@ -24,7 +24,7 @@ module display_7_seg (
    
    always @ (*)
      begin
-	case(count[N-1:N-2]) //using only the 2 MSB's of the counter 
+	case(count[N-6:N-7]) //using only the 2 MSB's of the counter 
 	  
 	  2'b00 :  //When the 2 MSB's are 00 enable the fourth display
 	    begin

@@ -21,42 +21,28 @@
 module counter_top #( parameter SIZE = 32, parameter VALUE = 5000000)(
 	input clk,
 	input rst,
-	output valued_reached,
-	input start,
-	input stop
+	output reg valued_reached
     );
 
-reg [SIZE-1:0] count_d, count_ff;
-reg ok_ff, ok_d;
+reg [SIZE-1:0] count_ff;
 
 
-assign valued_reached = ok_ff; 
 
-always @(*) begin
-	ok_d = ok_ff;
-	count_d = count_ff;
-	if(count_d == VALUE  ) begin
-		ok_d = 1'b1;
-		count_d = 'b1;
-	end
-	else begin
-		ok_d = 1'b0;
-		count_d = count_d + 1;
-	end
-		if(stop) begin
-		ok_d = 1'b0;
-	end
-end
 
 always @(posedge clk or posedge rst) begin
-	if(rst || start) begin
-		ok_ff <= 0;
-		count_ff <= 1'b1;
-
+	if(rst) begin
+		count_ff <= 'b1;
+		valued_reached <= 1'b0;  
 	end
 	else begin
-		count_ff <= count_d;
-		ok_ff <= ok_d;
+		if(count_ff == VALUE) begin
+			valued_reached <= 1'b1;
+			count_ff <= 'b1;
+		end
+		else begin
+			count_ff <= count_ff + 1;
+			valued_reached <= 1'b0;
+		end
 	end
 end
 
